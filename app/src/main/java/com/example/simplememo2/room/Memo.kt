@@ -11,5 +11,6 @@ import androidx.room.PrimaryKey
 data class Memo(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
+
     val content: String
 )

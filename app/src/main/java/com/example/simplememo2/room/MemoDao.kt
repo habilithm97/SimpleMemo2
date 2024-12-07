@@ -16,6 +16,6 @@ interface MemoDao {
     suspend fun addMemo(memo: Memo)
 
     // Flow : 비동기 데이터 스트림 -> 순차적 데이터 업데이트
-    @Query("select * from memo order by id")
+    @Query("select * from memo_table order by id")
     fun getAll(): Flow<List<Memo>>
 }
