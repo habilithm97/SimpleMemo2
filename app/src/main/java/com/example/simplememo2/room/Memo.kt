@@ -8,9 +8,7 @@ import androidx.room.PrimaryKey
  -테이블 구조와 1:1 매핑, DB 관리 단순화
 */
 @Entity(tableName = "memo_table")
-data class Memo(
+data class Memo(val content: String) {
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,
-
-    val content: String
-)
+    var id: Int = 0
+}

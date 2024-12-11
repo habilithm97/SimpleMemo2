@@ -5,15 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.simplememo2.R
 import com.example.simplememo2.adapter.MemoAdapter
 import com.example.simplememo2.databinding.FragmentListBinding
+import com.example.simplememo2.viewmodel.MemoViewModel
 
 class ListFragment : Fragment() {
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
     private val memoAdapter by lazy { MemoAdapter() }
+    private val memoViewModel: MemoViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,6 +43,15 @@ class ListFragment : Fragment() {
                     .replace(R.id.container, MemoFragment())
                     .addToBackStack(null) // 백스택에 추가
                     .commit()
+            }
+            memoViewModel.getAll.observe(viewLifecycleOwner) {
+                // 새로운 데이터 리스트를 어댑터에 제출
+                memoAdapter.submitList(it) {
+                    val itemCount = memoAdapter.itemCount
+                    if (itemCount > 0) {
+                        rv.smoothScrollToPosition(itemCount - 1) // 마지막 아이템 위치로 자동 스크롤
+                    }
+                }
             }
         }
     }
