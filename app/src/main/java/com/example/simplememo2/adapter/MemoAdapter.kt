@@ -29,7 +29,7 @@ class MemoAdapter(private val onItemLongClick: (Memo) -> Unit)
                 }
         private fun showPopupMenu(view: View, memo: Memo) {
             PopupMenu(view.context, view).apply {
-                menuInflater.inflate(R.menu.memo_context_menu, menu)
+                menuInflater.inflate(R.menu.context_menu, menu)
 
                 setOnMenuItemClickListener { item ->
                     when (item.itemId) {
