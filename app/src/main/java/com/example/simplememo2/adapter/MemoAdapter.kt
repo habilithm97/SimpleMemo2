@@ -18,7 +18,8 @@ class MemoAdapter(private val onItemLongClick: (Memo) -> Unit)
             RecyclerView.ViewHolder(binding.root) {
                 fun bind(memo: Memo) {
                     binding.apply {
-                        tvContent.text = memo.content
+                        this.memo = memo // xml 데이터 변수에 Memo 객체 연결
+                        executePendingBindings() // 데이터를 즉시 반영
 
                         root.setOnLongClickListener {
                             showPopupMenu(it, memo)
