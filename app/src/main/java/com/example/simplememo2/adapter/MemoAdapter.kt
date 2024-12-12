@@ -1,20 +1,47 @@
 package com.example.simplememo2.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.simplememo2.R
 import com.example.simplememo2.databinding.ItemMemoBinding
 import com.example.simplememo2.room.Memo
 
-class MemoAdapter : ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK) {
+class MemoAdapter(private val onItemLongClick: (Memo) -> Unit)
+    : ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK) {
 
     inner class MemoViewHolder(private val binding: ItemMemoBinding) :
             RecyclerView.ViewHolder(binding.root) {
                 fun bind(memo: Memo) {
-                    binding.tvContent.text = memo.content
+                    binding.apply {
+                        tvContent.text = memo.content
+
+                        root.setOnLongClickListener {
+                            showPopupMenu(it, memo)
+                            true
+                        }
+                    }
                 }
+        private fun showPopupMenu(view: View, memo: Memo) {
+            PopupMenu(view.context, view).apply {
+                menuInflater.inflate(R.menu.memo_context_menu, menu)
+
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.delete -> {
+                            onItemLongClick(memo)
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                show()
+            }
+        }
             }
 
     companion object {

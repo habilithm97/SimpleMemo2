@@ -1,6 +1,7 @@
 package com.example.simplememo2.room
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -14,6 +15,9 @@ import kotlinx.coroutines.flow.Flow
 interface MemoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addMemo(memo: Memo)
+
+    @Delete
+    suspend fun deleteMemo(memo: Memo)
 
     // Flow : 비동기 데이터 스트림 -> 순차적 데이터 업데이트
     @Query("select * from memo_table order by id")

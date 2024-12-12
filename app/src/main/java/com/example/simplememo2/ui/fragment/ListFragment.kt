@@ -1,5 +1,6 @@
 package com.example.simplememo2.ui.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,12 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.simplememo2.R
 import com.example.simplememo2.adapter.MemoAdapter
 import com.example.simplememo2.databinding.FragmentListBinding
+import com.example.simplememo2.room.Memo
 import com.example.simplememo2.viewmodel.MemoViewModel
 
 class ListFragment : Fragment() {
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
-    private val memoAdapter by lazy { MemoAdapter() }
     private val memoViewModel: MemoViewModel by viewModels()
 
     override fun onCreateView(
@@ -28,6 +29,12 @@ class ListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val memoAdapter = MemoAdapter(
+            onItemLongClick = { memo ->
+                showDeleteDialog(memo)
+            }
+        )
 
         binding.apply {
             rv.apply {
@@ -54,6 +61,18 @@ class ListFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun showDeleteDialog(memo: Memo) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("삭제")
+            .setMessage("선택한 메모를 삭제할까요 ?")
+            .setPositiveButton("삭제") { dialog, _ ->
+                memoViewModel.deleteMemo(memo)
+                dialog.dismiss()
+            }
+            .setNegativeButton("취소",null)
+            .show()
     }
 
     override fun onDestroyView() {
