@@ -14,6 +14,7 @@ import com.example.simplememo2.ui.fragment.ListFragment
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    var isMultiSelect: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,9 +73,44 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.select -> {
+                toggleMultiSelect()
+                true
+            }
+            R.id.cancel -> {
+                toggleMultiSelect()
+                true
+            }
+            R.id.selectAll -> {
+                true
+            }
+            R.id.delete -> {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun toggleMultiSelect() {
+        isMultiSelect = !isMultiSelect
+
+        val listFragment = supportFragmentManager.findFragmentById(R.id.container) as ListFragment
+        listFragment.toggleState(isMultiSelect)
+
+        menuVisibility(
+            selectVisible = !isMultiSelect,
+            cancelVisible = isMultiSelect,
+            selectAllVisible = isMultiSelect,
+            deleteVisible = isMultiSelect
+        )
+    }
+
+    private fun menuVisibility(selectVisible: Boolean, cancelVisible: Boolean,
+                               selectAllVisible: Boolean, deleteVisible: Boolean) {
+        binding.toolbar.menu?.apply {
+            findItem(R.id.select)?.isVisible = selectVisible
+            findItem(R.id.cancel)?.isVisible = cancelVisible
+            findItem(R.id.selectAll)?.isVisible = selectAllVisible
+            findItem(R.id.delete)?.isVisible = deleteVisible
         }
     }
 }

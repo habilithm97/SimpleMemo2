@@ -12,12 +12,14 @@ import com.example.simplememo2.R
 import com.example.simplememo2.adapter.MemoAdapter
 import com.example.simplememo2.databinding.FragmentListBinding
 import com.example.simplememo2.room.Memo
+import com.example.simplememo2.ui.activity.MainActivity
 import com.example.simplememo2.viewmodel.MemoViewModel
 
 class ListFragment : Fragment() {
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
     private val memoViewModel: MemoViewModel by viewModels()
+    private lateinit var memoAdapter: MemoAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,9 +32,12 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val memoAdapter = MemoAdapter(
+        memoAdapter = MemoAdapter(
             onItemLongClick = { memo ->
                 showDeleteDialog(memo)
+            },
+            onItemChecked = { memo, isChecked ->
+
             }
         )
 
@@ -51,16 +56,24 @@ class ListFragment : Fragment() {
                     .addToBackStack(null) // 백스택에 추가
                     .commit()
             }
-            memoViewModel.getAll.observe(viewLifecycleOwner) {
-                // 새로운 데이터 리스트를 어댑터에 제출
-                memoAdapter.submitList(it) {
-                    val itemCount = memoAdapter.itemCount
-                    if (itemCount > 0) {
-                        rv.smoothScrollToPosition(itemCount - 1) // 마지막 아이템 위치로 자동 스크롤
+            memoViewModel.apply {
+                getAll.observe(viewLifecycleOwner) {
+                    // 새로운 데이터 리스트를 어댑터에 제출
+                    memoAdapter.submitList(it) {
+                        val itemCount = memoAdapter.itemCount
+                        if (itemCount > 0) {
+                            rv.smoothScrollToPosition(itemCount - 1) // 마지막 아이템 위치로 자동 스크롤
+                        }
                     }
                 }
             }
+            val isMultiSelect = (requireActivity() as MainActivity).isMultiSelect
+            memoAdapter.toggleState(isMultiSelect)
         }
+    }
+
+    fun toggleState(isMultiSelect: Boolean) {
+        memoAdapter.toggleState(isMultiSelect)
     }
 
     private fun showDeleteDialog(memo: Memo) {

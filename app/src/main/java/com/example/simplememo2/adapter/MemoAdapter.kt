@@ -11,15 +11,31 @@ import com.example.simplememo2.R
 import com.example.simplememo2.databinding.ItemMemoBinding
 import com.example.simplememo2.room.Memo
 
-class MemoAdapter(private val onItemLongClick: (Memo) -> Unit)
+class MemoAdapter(private val onItemLongClick: (Memo) -> Unit,
+                  private val onItemChecked: (Memo, Boolean) -> Unit)
     : ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK) {
+
+    private var isMultiSelect: Boolean = false
+
+    fun toggleState(isMultiSelect: Boolean) {
+        this.isMultiSelect = isMultiSelect
+        val updatedList = currentList.map { it.copy(isMultiSelect = isMultiSelect) }
+        submitList(updatedList)
+    }
 
     inner class MemoViewHolder(private val binding: ItemMemoBinding) :
             RecyclerView.ViewHolder(binding.root) {
                 fun bind(memo: Memo) {
                     binding.apply {
-                        this.memo = memo // xml 데이터 변수에 Memo 객체 연결
+                        this.memo = memo
                         executePendingBindings() // 데이터를 즉시 반영
+
+                        checkBox.visibility = if (memo.isMultiSelect) View.VISIBLE else View.GONE
+                        checkBox.isChecked = false
+
+                        checkBox.setOnCheckedChangeListener { _, isChecked ->
+                            onItemChecked(memo, isChecked)
+                        }
 
                         root.setOnLongClickListener {
                             showPopupMenu(it, memo)
@@ -27,6 +43,7 @@ class MemoAdapter(private val onItemLongClick: (Memo) -> Unit)
                         }
                     }
                 }
+
         private fun showPopupMenu(view: View, memo: Memo) {
             PopupMenu(view.context, view).apply {
                 menuInflater.inflate(R.menu.context_menu, menu)
