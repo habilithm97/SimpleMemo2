@@ -1,6 +1,7 @@
 package com.example.simplememo2.ui.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
@@ -14,7 +15,7 @@ import com.example.simplememo2.ui.fragment.ListFragment
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    var isMultiSelect: Boolean = false
+    var isMultiSelect = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,7 +95,8 @@ class MainActivity : AppCompatActivity() {
         isMultiSelect = !isMultiSelect
 
         val listFragment = supportFragmentManager.findFragmentById(R.id.container) as ListFragment
-        listFragment.toggleState(isMultiSelect)
+        listFragment.toggleState(isMultiSelect) // ListFragment로 상태 전달
+        Log.d("MainActivity", "ListFragment로 상태 전달 : isMultiSelect = $isMultiSelect")
 
         menuVisibility(
             selectVisible = !isMultiSelect,

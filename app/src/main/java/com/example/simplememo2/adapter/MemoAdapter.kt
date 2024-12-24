@@ -1,5 +1,6 @@
 package com.example.simplememo2.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +16,9 @@ class MemoAdapter(private val onItemLongClick: (Memo) -> Unit,
                   private val onItemChecked: (Memo, Boolean) -> Unit)
     : ListAdapter<Memo, MemoAdapter.MemoViewHolder>(DIFF_CALLBACK) {
 
-    private var isMultiSelect: Boolean = false
+    private var isMultiSelect = false
 
+    // 상태 토글 및 갱신
     fun toggleState(isMultiSelect: Boolean) {
         this.isMultiSelect = isMultiSelect
         val updatedList = currentList.map { it.copy(isMultiSelect = isMultiSelect) }
@@ -27,16 +29,18 @@ class MemoAdapter(private val onItemLongClick: (Memo) -> Unit,
             RecyclerView.ViewHolder(binding.root) {
                 fun bind(memo: Memo) {
                     binding.apply {
-                        this.memo = memo
+                        Log.d("MemoAdapter", "Bind 호출됨 : isMultiSelect = ${memo.isMultiSelect}")
+
+                        this.memo = memo // xml 데이터 변수에 Memo 객체 연결
                         executePendingBindings() // 데이터를 즉시 반영
-
-                        checkBox.visibility = if (memo.isMultiSelect) View.VISIBLE else View.GONE
-                        checkBox.isChecked = false
-
-                        checkBox.setOnCheckedChangeListener { _, isChecked ->
-                            onItemChecked(memo, isChecked)
+                        
+                        checkBox.apply {
+                            visibility = if (memo.isMultiSelect) View.VISIBLE else View.GONE
+                            isChecked = false
+                            setOnCheckedChangeListener { _, isChecked ->
+                                onItemChecked(memo, isChecked)
+                            }
                         }
-
                         root.setOnLongClickListener {
                             showPopupMenu(it, memo)
                             true
