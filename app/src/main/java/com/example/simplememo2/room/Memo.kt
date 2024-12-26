@@ -8,7 +8,10 @@ import androidx.room.PrimaryKey
  -테이블 구조와 1:1 매핑, DB 관리 단순화
 */
 @Entity(tableName = "memo_table")
-data class Memo(val content: String, val isMultiSelect: Boolean = false) {
+data class Memo(
+    val content: String,
+    val isMultiSelect: Boolean = false,
+    var isChecked: Boolean = false) {
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 }

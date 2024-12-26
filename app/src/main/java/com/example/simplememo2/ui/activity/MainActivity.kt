@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.selectAll -> {
+                toggleSelectAll()
                 true
             }
             R.id.delete -> {
@@ -114,5 +115,10 @@ class MainActivity : AppCompatActivity() {
             findItem(R.id.selectAll)?.isVisible = selectAllVisible
             findItem(R.id.delete)?.isVisible = deleteVisible
         }
+    }
+
+    private fun toggleSelectAll() {
+        val listFragment = supportFragmentManager.findFragmentById(R.id.container) as ListFragment
+        listFragment.toggleSelectAll()
     }
 }

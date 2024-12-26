@@ -78,6 +78,11 @@ class ListFragment : Fragment() {
         Log.d("ListFragment", "MemoAdapter로 상태 전달 : isMultiSelect = $isMultiSelect")
     }
 
+    fun toggleSelectAll() {
+        val isSelectAll = memoAdapter.isSelectAll()
+        memoAdapter.toggleSelectAll(!isSelectAll) // 현재 상태의 반대값으로 체크 상태 토글
+    }
+
     private fun showDeleteDialog(memo: Memo) {
         AlertDialog.Builder(requireContext())
             .setTitle("삭제")
