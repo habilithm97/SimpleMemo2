@@ -52,11 +52,26 @@ class ListFragment : Fragment() {
                 }
                 setHasFixedSize(true) // 아이템 크기 고정 -> 성능 최적화
             }
-            fab.setOnClickListener {
+            fabAdd.setOnClickListener {
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.container, MemoFragment())
                     .addToBackStack(null) // 백스택에 추가
                     .commit()
+            }
+            fabDelete.setOnClickListener {
+                val checkedMemos = mutableListOf<Memo>() // 체크된 메모 리스트
+                val listSize = memoAdapter.currentList.size // 전체 리스트 크기
+                // 전체 리스트를 순회하며 체크된 메모 찾기
+                for (index in 0 until listSize) {
+                    val memo = memoAdapter.currentList[index]
+                    // 체크된 메모만 리스트에 객체 추가
+                    if (memo.isChecked) {
+                        checkedMemos.add(memo)
+                    }
+                }
+                if (checkedMemos.isNotEmpty()) {
+                    showDeleteDialog2(checkedMemos)
+                }
             }
             memoViewModel.getAll.observe(viewLifecycleOwner) {
                 // 새로운 데이터 리스트를 어댑터에 제출
@@ -75,6 +90,7 @@ class ListFragment : Fragment() {
 
     fun toggleState(isMultiSelect: Boolean) {
         memoAdapter.toggleState(isMultiSelect)
+        binding.fabDelete.visibility = if (isMultiSelect) View.VISIBLE else View.GONE
         Log.d("ListFragment", "MemoAdapter로 상태 전달 : isMultiSelect = $isMultiSelect")
     }
 
@@ -89,6 +105,18 @@ class ListFragment : Fragment() {
             .setMessage("선택한 메모를 삭제할까요 ?")
             .setPositiveButton("삭제") { dialog, _ ->
                 memoViewModel.deleteMemo(memo)
+                dialog.dismiss()
+            }
+            .setNegativeButton("취소",null)
+            .show()
+    }
+
+    private fun showDeleteDialog2(memos: List<Memo>) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("삭제")
+            .setMessage("선택한 메모를 삭제할까요 ?")
+            .setPositiveButton("삭제") { dialog, _ ->
+                memoViewModel.deleteMemos(memos)
                 dialog.dismiss()
             }
             .setNegativeButton("취소",null)

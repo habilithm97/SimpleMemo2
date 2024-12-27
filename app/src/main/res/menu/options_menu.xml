@@ -11,7 +11,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/selectAll"
-        android:title="모두 선택"
+        android:title="전체"
         android:visible="false"
         app:showAsAction="always" />
     <item

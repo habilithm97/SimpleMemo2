@@ -19,6 +19,9 @@ interface MemoDao {
     @Delete
     suspend fun deleteMemo(memo: Memo)
 
+    @Delete
+    suspend fun deleteMemos(memos: List<Memo>)
+
     // Flow : 비동기 데이터 스트림 -> 순차적 데이터 업데이트
     @Query("select * from memo_table order by id")
     fun getAll(): Flow<List<Memo>>

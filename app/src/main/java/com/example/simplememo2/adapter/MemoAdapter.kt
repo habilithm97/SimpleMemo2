@@ -25,8 +25,8 @@ class MemoAdapter(private val onItemLongClick: (Memo) -> Unit,
                         Log.d("MemoAdapter", "bind 호출됨 : isMultiSelect = ${memo.isMultiSelect}")
 
                         this.memo = memo // xml 데이터 변수에 Memo 객체 연결
-                        executePendingBindings() // 데이터를 즉시 반영
-                        
+                        executePendingBindings() // 데이터 바인딩 후 UI 갱신 즉시 반영
+
                         checkBox.apply {
                             visibility = if (memo.isMultiSelect) View.VISIBLE else View.GONE
                             isChecked = memo.isChecked

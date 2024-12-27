@@ -16,6 +16,9 @@ class MemoRepository(private val memoDao: MemoDao) {
     suspend fun deleteMemo(memo: Memo) {
         memoDao.deleteMemo(memo)
     }
+    suspend fun deleteMemos(memos: List<Memo>) {
+        memoDao.deleteMemos(memos)
+    }
     fun getAll(): Flow<List<Memo>> {
         return memoDao.getAll()
     }
