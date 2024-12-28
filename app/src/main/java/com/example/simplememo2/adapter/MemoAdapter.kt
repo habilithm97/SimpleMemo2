@@ -31,8 +31,8 @@ class MemoAdapter(private val onItemLongClick: (Memo) -> Unit,
                             visibility = if (memo.isMultiSelect) View.VISIBLE else View.GONE
                             isChecked = memo.isChecked
                             setOnCheckedChangeListener { _, isChecked ->
-                                // onItemChecked(memo, isChecked)
                                 memo.isChecked = isChecked // memo 객체의 선택 상태 업데이트
+                                // onItemChecked(memo, isChecked) // 외부로 상태 전달
                             }
                         }
                         root.setOnLongClickListener {

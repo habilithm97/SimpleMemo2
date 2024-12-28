@@ -59,18 +59,13 @@ class ListFragment : Fragment() {
                     .commit()
             }
             fabDelete.setOnClickListener {
-                val checkedMemos = mutableListOf<Memo>() // 체크된 메모 리스트
-                val listSize = memoAdapter.currentList.size // 전체 리스트 크기
-                // 전체 리스트를 순회하며 체크된 메모 찾기
-                for (index in 0 until listSize) {
-                    val memo = memoAdapter.currentList[index]
-                    // 체크된 메모만 리스트에 객체 추가
-                    if (memo.isChecked) {
-                        checkedMemos.add(memo)
-                    }
-                }
+                val checkedMemos = memoAdapter.currentList.filter { it.isChecked }
+                Log.d("ListFragment", "선택된 메모: $checkedMemos")
+
                 if (checkedMemos.isNotEmpty()) {
                     showDeleteDialog2(checkedMemos)
+                } else {
+                    Log.d("ListFragment", "삭제할 메모가 선택되지 않았습니다.")
                 }
             }
             memoViewModel.getAll.observe(viewLifecycleOwner) {
@@ -105,6 +100,7 @@ class ListFragment : Fragment() {
             .setMessage("선택한 메모를 삭제할까요 ?")
             .setPositiveButton("삭제") { dialog, _ ->
                 memoViewModel.deleteMemo(memo)
+                Log.d("ListFragment", "삭제: ${memo.id}, ${memo.content}")
                 dialog.dismiss()
             }
             .setNegativeButton("취소",null)
@@ -117,6 +113,7 @@ class ListFragment : Fragment() {
             .setMessage("선택한 메모를 삭제할까요 ?")
             .setPositiveButton("삭제") { dialog, _ ->
                 memoViewModel.deleteMemos(memos)
+                Log.d("MemoDelete", "삭제할 메모: ${memos.joinToString { "id=${it.id}, content=${it.content}" }}")
                 dialog.dismiss()
             }
             .setNegativeButton("취소",null)
