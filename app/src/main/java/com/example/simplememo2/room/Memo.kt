@@ -1,5 +1,6 @@
 package com.example.simplememo2.room
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -9,9 +10,6 @@ import androidx.room.PrimaryKey
 */
 @Entity(tableName = "memo_table")
 data class Memo(
-    val content: String,
-    val isMultiSelect: Boolean = false,
-    var isChecked: Boolean = false) {
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0
-}
+    @PrimaryKey(autoGenerate = true) var id: Long,
+    @ColumnInfo(name = "content") var content: String
+)

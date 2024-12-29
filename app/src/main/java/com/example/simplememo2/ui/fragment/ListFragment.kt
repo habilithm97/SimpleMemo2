@@ -113,7 +113,7 @@ class ListFragment : Fragment() {
             .setMessage("선택한 메모를 삭제할까요 ?")
             .setPositiveButton("삭제") { dialog, _ ->
                 memoViewModel.deleteMemos(memos)
-                Log.d("MemoDelete", "삭제할 메모: ${memos.joinToString { "id=${it.id}, content=${it.content}" }}")
+                Log.d("MemoDelete", "삭제 : ${memos.joinToString { "${it.id}, ${it.content}" }}")
                 dialog.dismiss()
             }
             .setNegativeButton("취소",null)

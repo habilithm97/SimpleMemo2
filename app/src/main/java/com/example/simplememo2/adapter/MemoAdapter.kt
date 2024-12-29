@@ -23,6 +23,7 @@ class MemoAdapter(private val onItemLongClick: (Memo) -> Unit,
                 fun bind(memo: Memo) {
                     binding.apply {
                         Log.d("MemoAdapter", "bind 호출됨 : isMultiSelect = ${memo.isMultiSelect}")
+                        Log.d("MemoAdapter", "바인딩된 메모 : ${memo.id}, ${memo.content}")
 
                         this.memo = memo // xml 데이터 변수에 Memo 객체 연결
                         executePendingBindings() // 데이터 바인딩 후 UI 갱신 즉시 반영
@@ -32,7 +33,8 @@ class MemoAdapter(private val onItemLongClick: (Memo) -> Unit,
                             isChecked = memo.isChecked
                             setOnCheckedChangeListener { _, isChecked ->
                                 memo.isChecked = isChecked // memo 객체의 선택 상태 업데이트
-                                // onItemChecked(memo, isChecked) // 외부로 상태 전달
+                                Log.d("MemoAdapter", "체크된 메모 : ${memo.id}, $isChecked")
+                                //onItemChecked(memo.copy(isChecked = isChecked), isChecked)
                             }
                         }
                         root.setOnLongClickListener {
